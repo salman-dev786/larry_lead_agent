@@ -1,0 +1,54 @@
+{
+  "name": "larry-the-lead-agent",
+  "version": "1.0.0",
+  "description": "AI Chat Interface",
+  "main": "src/server/server.js",
+  "proxy": "http://localhost:3001",
+  "scripts": {
+    "start": "node src/server/server.js",
+    "build": "react-scripts build",
+    "dev:build": "react-scripts build",
+    "dev:server": "nodemon src/server/server.js",
+    "dev": "npm run dev:build && npm run dev:server",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.7.9",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "lucide-react": "^0.475.0",
+    "mongoose": "^8.10.1",
+    "nodemon": "^3.0.3",
+    "openai": "^4.85.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^10.0.0",
+    "react-scripts": "5.0.1",
+    "remark-gfm": "^4.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
