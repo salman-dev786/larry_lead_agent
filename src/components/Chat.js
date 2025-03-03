@@ -240,8 +240,6 @@ const Chat = () => {
     }
   }, []);
 
-  console.log("User from local", user);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userMessage = input.trim();
@@ -258,6 +256,8 @@ const Chat = () => {
       console.log(error);
     }
   };
+
+  console.log("mesages list", messages);
 
   return (
     <div className="chat-container" ref={chatContainerRef}>

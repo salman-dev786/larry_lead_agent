@@ -28,7 +28,8 @@ Output format (JSON):
     "parameters": {
         "state": "two letter state code or null",
         "city": "city name or null",
-        "zip": "5-digit zip code or null"
+        "zip": "5-digit zip code or null",
+        "street": "street address or null",
     },
     "shouldSearchLeads": boolean,
     "searchReason": "brief explanation"
@@ -76,26 +77,23 @@ const formatLeadsForDisplay = (leads, location) => {
     }`.trim();
   }
 
-  // Group leads by location
-  const leadsByLocation = {};
-  leads.forEach((lead) => {
-    const key = `${lead.city}, ${lead.state}`;
-    if (!leadsByLocation[key]) leadsByLocation[key] = [];
-    leadsByLocation[key].push(lead);
-  });
+  return leads
+    .map((lead) => {
+      const address = lead.address || {};
+      const owner =
+        lead.deedHistory && lead.deedHistory.length > 0
+          ? lead.deedHistory[lead.deedHistory.length - 1].buyers.join(", ")
+          : "Unknown";
 
-  // Format each group
-  let response = "";
-  Object.entries(leadsByLocation).forEach(([location, locationLeads]) => {
-    response += `\n### Leads in ${location}\n\n`;
-    locationLeads.forEach((lead) => {
-      response += `- **Address**: ${lead.street_address}, ${lead.city}, ${lead.state} ${lead.zip}\n`;
-      response += `  **Owner**: ${lead.owner_full_name}\n`;
-      response += `  **Mailing**: ${lead.owner_mailing_street}, ${lead.owner_mailing_city}, ${lead.owner_mailing_state} ${lead.owner_mailing_zip}\n\n`;
-    });
-  });
-
-  return response.trim();
+      return `- **Address**: ${address.houseNumber || ""} ${
+        address.street || ""
+      }, ${address.city || ""}, ${address.state || ""} ${address.zip || ""}
+      **Owner**: ${owner}
+      **Mailing**: ${address.city || ""}, ${address.state || ""} ${
+        address.zip || ""
+      }`;
+    })
+    .join("\n");
 };
 
 // CORS and JSON middleware
@@ -133,8 +131,13 @@ app.post("/api/chat", async (req, res) => {
     // 1. Analyze user query and extract parameters
     const analysis = await extractSearchParameters(message);
 
+    const requiredParams = ["state", "city", "zip", "street"];
+    const missingParams = requiredParams.filter(
+      (param) => !analysis.parameters[param]
+    );
+
     // 2. If we should search for leads
-    if (analysis.shouldSearchLeads) {
+    if (analysis.shouldSearchLeads && missingParams.length === 0) {
       try {
         console.log("=== Processing Chat Lead Search ===");
         console.log("Extracted parameters:", analysis.parameters);

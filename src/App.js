@@ -3,7 +3,7 @@ import "./App.css";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Chat from "./components/Chat";
 
-const AUTH_URL = "http://localhost:3000/api/auth/clickfunnels";
+const AUTH_URL = `/api/auth/clickfunnels`;
 
 function Login() {
   const [token, setToken] = useState();
@@ -11,8 +11,6 @@ function Login() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     let token = urlParams.get("token");
-
-    console.log("Token", token);
 
     if (!token) {
       token = localStorage.getItem("accessToken");
@@ -25,7 +23,6 @@ function Login() {
     } else {
       setToken(null);
     }
-    console.log("Token 2.0", token);
   }, []);
 
   const fetchUserData = async (token) => {
@@ -47,7 +44,6 @@ function Login() {
       }
 
       const userData = await response.json();
-      console.log("User Data:", userData);
       localStorage.setItem("user", JSON.stringify(userData));
     } catch (error) {
       console.error("Failed to fetch user data:", error);
