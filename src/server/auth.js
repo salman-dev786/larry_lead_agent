@@ -16,6 +16,10 @@ router.get("/clickfunnels", (req, res) => {
   return res.redirect(authUrl);
 });
 
+function getCurrentUrl(req) {
+  return `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+}
+
 // OAuth Callback Route
 router.get("/callback", async (req, res) => {
   const { code } = req.query;
@@ -26,12 +30,13 @@ router.get("/callback", async (req, res) => {
   }
 
   try {
+    const url = getCurrentUrl(req);
     const response = await axios.post(
       TOKEN_URL,
       {
         client_id: CLIENT_ID,
         client_secret: CLIENT_SECRET,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: url + "/api/auth/callback",
         code,
         grant_type: "authorization_code",
       },
