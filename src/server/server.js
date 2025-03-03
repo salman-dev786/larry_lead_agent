@@ -104,6 +104,11 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+app.get("/", (req, res) => {
+  res.send("Hello!CORS enabled for all origins!");
+});
+
 app.use(express.json({ limit: "1mb" }));
 
 // Mount leads router
