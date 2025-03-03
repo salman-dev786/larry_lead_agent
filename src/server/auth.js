@@ -31,6 +31,7 @@ router.get("/callback", async (req, res) => {
 
   try {
     const url = getCurrentUrl(req);
+    console.log("url", url);
     const response = await axios.post(
       TOKEN_URL,
       {
