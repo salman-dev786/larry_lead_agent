@@ -99,11 +99,16 @@ const formatLeadsForDisplay = (leads, location) => {
 // CORS and JSON middleware
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+app.get("/", (req, res) => {
+  res.send("Hello!CORS enabled for all origins!");
+});
+
 app.use(express.json({ limit: "1mb" }));
 
 // Mount leads router
