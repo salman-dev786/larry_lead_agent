@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Embed Example</title>
+    <style>
+        .chat-frame {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat Embed Example</h1>
+    <div style="max-width: 800px; margin: 20px auto;">
+        <iframe
+            src="http://localhost:3000"
+            class="chat-frame"
+            id="chatFrame"
+            allow="microphone"
+        ></iframe>
+    </div>
+
+    <script>
+        // Handle messages from the chat iframe
+        window.addEventListener('message', (event) => {
+            if (event.origin !== 'http://localhost:3000') return;
+
+            if (event.data.type === 'CHAT_RESIZE') {
+                // Adjust iframe height based on content
+                document.getElementById('chatFrame').style.height = 
+                    Math.max(300, event.data.height) + 'px';
+            }
+
+            if (event.data.type === 'CHAT_RESPONSE') {
+                console.log('AI Response:', event.data.message);
+            }
+        });
+
+        // Example: Send a message to the chat
+        function sendMessage(message) {
+            document.getElementById('chatFrame').contentWindow.postMessage({
+                type: 'CHAT_MESSAGE',
+                message: message
+            }, 'http://localhost:3000');
+        }
+    </script>
+</body>
+</html> 
